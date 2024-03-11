@@ -5,6 +5,7 @@ import 'package:rapido/responsive/mobile_screen_layout.dart';
 import 'package:rapido/responsive/responsive_layout_screen.dart';
 import 'package:rapido/responsive/web_screen_layout.dart';
 import 'package:rapido/screens/login_screen.dart';
+import 'package:rapido/screens/signup_screen.dart';
 import 'package:rapido/utils/colors.dart';
 
 Future<void> main() async {
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
       title: 'Instagram Clone',
       theme: ThemeData.dark()
           .copyWith(scaffoldBackgroundColor: mobileBackgroundColor),
-      home: LoginScreen(),
+      home: SignupScreen(),
     );
   }
 }
