@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:rapido/responsive/mobile_screen_layout.dart';
+import 'package:rapido/responsive/responsive_layout_screen.dart';
+import 'package:rapido/responsive/web_screen_layout.dart';
+import 'package:rapido/ressources/auth_methods.dart';
+import 'package:rapido/screens/signup_screen.dart';
 import 'package:rapido/utils/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rapido/utils/utils.dart';
 import 'package:rapido/widgets/text_field_input.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,11 +19,46 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().loginUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    if (res == 'success') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayoutScreen(
+            mobileScreenLayout: MobileScreenLayout(),
+            webScreenLayout: WebScreenLayout(),
+          ),
+        ),
+      );
+    } else {
+      showSnackBar(res, context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void navigateToSignUp() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const SignupScreen(),
+      ),
+    );
   }
 
   @override
@@ -34,7 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 // svg image
                 SvgPicture.asset(
                   'assets/ic_instagram.svg',
-                  colorFilter: const ColorFilter.mode(primaryColor, BlendMode.srcIn),
+                  colorFilter:
+                      const ColorFilter.mode(primaryColor, BlendMode.srcIn),
                   height: 64,
                 ),
                 const SizedBox(
@@ -59,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 // button login
                 InkWell(
+                  onTap: loginUser,
                   child: Container(
                     width: double.infinity,
                     alignment: Alignment.center,
@@ -68,7 +111,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(4)),
                         ),
                         color: blueColor),
-                    child: const Text('Log in'),
+                    child: _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: primaryColor,
+                            ),
+                          )
+                        : const Text('Log in'),
                   ),
                 ),
                 const SizedBox(
@@ -85,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text('Don\'t have an account?'),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: navigateToSignUp,
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: const Text(
