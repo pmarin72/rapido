@@ -6,6 +6,7 @@ import 'package:rapido/ressources/auth_methods.dart';
 import 'package:rapido/screens/signup_screen.dart';
 import 'package:rapido/utils/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rapido/utils/global_variables.dart';
 import 'package:rapido/utils/utils.dart';
 import 'package:rapido/widgets/text_field_input.dart';
 
@@ -37,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       password: _passwordController.text,
     );
     if (res == 'success') {
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context as BuildContext).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const ResponsiveLayoutScreen(
             mobileScreenLayout: MobileScreenLayout(),
@@ -46,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } else {
-      showSnackBar(res, context);
+      showSnackBar(res, context as BuildContext);
     }
     setState(() {
       _isLoading = false;
@@ -54,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void navigateToSignUp() {
-    Navigator.of(context).push(
+    Navigator.of(context as BuildContext).push(
       MaterialPageRoute(
         builder: (context) => const SignupScreen(),
       ),
@@ -66,7 +67,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+            padding: MediaQuery.of(context).size.width > webScreenSize
+                ? EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width / 3)
+                : const EdgeInsets.symmetric(horizontal: 32),
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
